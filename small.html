@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="bn" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrganoKrishi — Purity from Root to Table</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #050a06;
+            color: #ffffff;
+        }
+
+        ::selection {
+            background: rgba(34, 197, 94, 0.3);
+            color: #bbf7d0;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050a06;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1a2e1f;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2a4a32;
+        }
+
+        .glass-panel {
+            background: rgba(15, 30, 18, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(34, 197, 94, 0.08);
+        }
+
+        .hero-bg {
+            background: linear-gradient(135deg, #0a1f0e 0%, #050a06 40%, #000000 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 70%;
+            height: 160%;
+            background: radial-gradient(ellipse, rgba(34, 197, 94, 0.07) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 50%;
+            height: 100%;
+            background: radial-gradient(ellipse, rgba(34, 197, 94, 0.04) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .product-card:hover .product-img {
+            transform: scale(1.08);
+        }
+
+        .product-card:hover {
+            border-color: rgba(34, 197, 94, 0.3);
+            box-shadow: 0 0 40px rgba(34, 197, 94, 0.06);
+        }
+
+        .category-btn.active {
+            background: #16a34a;
+            color: #fff;
+            border-color: #16a34a;
+        }
+
+        .toast {
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.2s forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .float-anim {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .badge-sale {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+
+        .badge-new {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+        }
+
+        .by-daniul {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .logo-glow {
+            filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.2));
+        }
+
+        .green-glow {
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.1);
+        }
+
+        .leaf-border {
+            border-image: linear-gradient(to right, rgba(34, 197, 94, 0.3), rgba(34, 197, 94, 0.05)) 1;
+        }
+
+        @keyframes grow {
+            from {
+                transform: scaleY(0);
+                transform-origin: bottom;
+            }
+
+            to {
+                transform: scaleY(1);
+                transform-origin: bottom;
+            }
+        }
+
+        .stat-bar {
+            animation: grow 1.5s ease-out;
+        }
+
+        .nav-blur {
+            background: rgba(5, 10, 6, 0.92);
+            backdrop-filter: blur(16px);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-20 right-4 z-[100] flex flex-col gap-2"></div>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black/60 z-[90] hidden" onclick="toggleCart()"></div>
+    <div id="cart-sidebar"
+        class="fixed top-0 right-0 h-full w-full max-w-md bg-[#081208] border-l border-green-900/30 z-[95] transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="flex items-center justify-between p-6 border-b border-green-900/20">
+            <h3 class="text-lg font-semibold flex items-center gap-2">
+                <i data-lucide="shopping-cart" class="w-5 h-5 text-green-400"></i>
+                আপনার কার্ট
+            </h3>
+            <button onclick="toggleCart()" class="text-zinc-400 hover:text-white transition-colors p-1">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+            <div id="cart-empty" class="flex flex-col items-center justify-center h-full text-zinc-500">
+                <i data-lucide="shopping-bag" class="w-16 h-16 mb-4 opacity-20"></i>
+                <p class="text-lg">কার্ট খালি!</p>
+                <p class="text-sm mt-1">পণ্য যোগ করুন</p>
+            </div>
+        </div>
+        <div id="cart-footer" class="border-t border-green-900/20 p-6 hidden">
+            <div class="flex justify-between mb-2 text-sm text-zinc-400">
+                <span>সাবটোটাল</span>
+                <span id="cart-subtotal">৳0</span>
+            </div>
+            <div class="flex justify-between mb-2 text-sm text-zinc-400">
+                <span>ডেলিভারি চার্জ</span>
+                <span class="text-green-400">ফ্রি</span>
+            </div>
+            <div class="flex justify-between mb-4 text-lg font-semibold">
+                <span>মোট</span>
+                <span id="cart-total" class="text-green-400">৳0</span>
+            </div>
+            <button onclick="showToast('অর্ডার কনফার্ম করা হয়েছে! 🌿', 'success')"
+                class="w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-3 rounded-lg transition-all">
+                অর্ডার কনফার্ম করুন
+            </button>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="fixed inset-0 bg-black/70 z-[80] hidden flex items-center justify-center p-4"
+        onclick="closeModal(event)">
+        <div class="glass-panel rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            onclick="event.stopPropagation()">
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 h-16 z-50 border-b border-green-900/20 nav-blur">
+        <div class="max-w-7xl mx-auto h-full px-4 md:px-6 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3">
+                <img src="https://z-cdn-media.chatglm.cn/files/de4e94e4-fc0f-4a1c-8ed5-793b56d2cbfa.jpg?auth_key=1881015813-e21d3bc0688e415d8e79d0a4ff7a0e7c-0-95be56ebbe46db09a4672ca85377542d"
+                    alt="OrganoKrishi Logo"
+                    class="h-10 w-10 rounded-full object-cover logo-glow border border-green-700/30">
+                <div class="flex flex-col leading-tight">
+                    <span class="text-base font-bold tracking-tight text-white">Organo<span
+                            class="text-green-400">Krishi</span></span>
+                    <span class="text-[9px] text-green-500/80 tracking-wider uppercase">Purity from Root to Table</span>
+                </div>
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#home"
+                    class="text-xs font-medium uppercase tracking-widest text-zinc-400 hover:text-green-400 transition-colors">হোম</a>
+                <a href="#products"
+                    class="text-xs font-medium uppercase tracking-widest text-zinc-400 hover:text-green-400 transition-colors">পণ্য</a>
+                <a href="#why-us"
+                    class="text-xs font-medium uppercase tracking-widest text-zinc-400 hover:text-green-400 transition-colors">কেন
+                    আমরা</a>
+                <a href="#offers"
+                    class="text-xs font-medium uppercase tracking-widest text-zinc-400 hover:text-green-400 transition-colors">অফার</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="toggleCart()"
+                    class="relative p-2 text-zinc-400 hover:text-green-400 transition-colors">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    <span id="cart-count"
+                        class="absolute -top-1 -right-1 bg-green-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                </button>
+                <button class="md:hidden p-2 text-zinc-400 hover:text-green-400" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-[#081208]/95 backdrop-blur-xl border-b border-green-900/20">
+            <div class="px-6 py-4 space-y-3">
+                <a href="#home" onclick="toggleMobileMenu()"
+                    class="block text-sm text-zinc-300 hover:text-green-400 transition-colors py-2">🏠 হোম</a>
+                <a href="#products" onclick="toggleMobileMenu()"
+                    class="block text-sm text-zinc-300 hover:text-green-400 transition-colors py-2">🛒 পণ্য</a>
+                <a href="#why-us" onclick="toggleMobileMenu()"
+                    class="block text-sm text-zinc-300 hover:text-green-400 transition-colors py-2">✨ কেন আমরা</a>
+                <a href="#offers" onclick="toggleMobileMenu()"
+                    class="block text-sm text-zinc-300 hover:text-green-400 transition-colors py-2">🔥 অফার</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg min-h-screen flex items-center pt-16 relative">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 w-full py-20">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-green-600/30 bg-green-600/10 text-green-400 text-xs font-medium">
+                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                        ফ্রেশ ডেলিভারি চালু আছে
+                    </div>
+                    <div>
+                        <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-2">
+                            খাঁটি পণ্য,
+                        </h1>
+                        <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-2">
+                            <span class="text-green-400">সেরা দামে</span>
+                        </h1>
+                        <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
+                            আপনার ঘরে
+                        </h1>
+                    </div>
+                    <p class="text-lg text-zinc-400 leading-relaxed max-w-lg">
+                        তাজা মুরগি, কোয়েল পাখি, হাঁস, ডিম, দুধ, আম ও লিচু — সবকিছু সরাসরি খামার থেকে আপনার দরজায়। কোনো
+                        মধ্যস্বত্বভোগী নেই, তাই দাম সবচেয়ে কম!
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#products"
+                            class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white font-semibold px-8 py-4 rounded-lg transition-all shadow-lg shadow-green-600/20">
+                            <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                            কেনাকাটা শুরু করুন
+                        </a>
+                        <a href="#why-us"
+                            class="inline-flex items-center gap-2 border border-zinc-700 hover:border-green-600/50 text-zinc-300 hover:text-green-400 font-semibold px-8 py-4 rounded-lg transition-all">
+                            <i data-lucide="play-circle" class="w-4 h-4"></i>
+                            আমাদের কথা জানুন
+                        </a>
+                    </div>
+                    <div class="flex items-center gap-8 pt-4">
+                        <div>
+                            <div class="text-2xl font-bold text-green-400">৫০০+</div>
+                            <div class="text-[10px] text-zinc-500 uppercase tracking-wider">সন্তুষ্ট গ্রাহক</div>
+                        </div>
+                        <div class="w-px h-10 bg-green-900/30"></div>
+                        <div>
+                            <div class="text-2xl font-bold text-green-400">১০০%</div>
+                            <div class="text-[10px] text-zinc-500 uppercase tracking-wider">খাঁটি পণ্য</div>
+                        </div>
+                        <div class="w-px h-10 bg-green-900/30"></div>
+                        <div>
+                            <div class="text-2xl font-bold text-green-400">ফ্রি</div>
+                            <div class="text-[10px] text-zinc-500 uppercase tracking-wider">হোম ডেলিভারি</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative hidden lg:flex items-center justify-center">
+                    <div class="relative float-anim">
+                        <!-- Logo as hero centerpiece -->
+                        <div class="relative">
+                            <div
+                                class="w-80 h-80 mx-auto rounded-full overflow-hidden border-2 border-green-600/20 green-glow">
+                                <img src="https://z-cdn-media.chatglm.cn/files/de4e94e4-fc0f-4a1c-8ed5-793b56d2cbfa.jpg?auth_key=1881015813-e21d3bc0688e415d8e79d0a4ff7a0e7c-0-95be56ebbe46db09a4672ca85377542d"
+                                    alt="OrganoKrishi" class="w-full h-full object-cover">
+                            </div>
+                            <!-- Floating badges -->
+                            <div class="absolute -bottom-2 -left-4 glass-panel rounded-xl p-4 flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-600/20 rounded-full flex items-center justify-center">
+                                    <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-medium">কোয়ালিটি গ্যারান্টি</div>
+                                    <div class="text-xs text-zinc-500">১০০% ফ্রেশ বা ফেরত</div>
+                                </div>
+                            </div>
+                            <div class="absolute -top-2 -right-4 glass-panel rounded-xl p-4 flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-600/20 rounded-full flex items-center justify-center">
+                                    <i data-lucide="truck" class="w-5 h-5 text-green-400"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-medium">দ্রুত ডেলিভারি</div>
+                                    <div class="text-xs text-zinc-500">২ ঘণ্টায় ঘরে</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decorative circles -->
+                    <div
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-green-600/10 rounded-full pointer-events-none">
+                    </div>
+                    <div
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] border border-green-600/5 rounded-full pointer-events-none">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brand Tagline Banner -->
+    <section class="py-8 border-y border-green-900/20 bg-[#060e08]">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
+            <img src="https://z-cdn-media.chatglm.cn/files/de4e94e4-fc0f-4a1c-8ed5-793b56d2cbfa.jpg?auth_key=1881015813-e21d3bc0688e415d8e79d0a4ff7a0e7c-0-95be56ebbe46db09a4672ca85377542d"
+                alt="OrganoKrishi" class="w-8 h-8 rounded-full object-cover border border-green-700/30">
+            <span class="text-green-400 font-semibold text-sm uppercase tracking-[0.2em]">Purity from Root to
+                Table</span>
+            <span class="text-zinc-600 hidden md:inline">|</span>
+            <span class="by-daniul text-lg text-green-300/60">by Daniul</span>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="py-16 border-b border-green-900/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
+                <div onclick="filterProducts('মুরগি')"
+                    class="cursor-pointer group glass-panel rounded-xl p-4 text-center hover:border-green-600/30 transition-all">
+                    <div class="text-3xl mb-2">🐔</div>
+                    <div class="text-xs font-medium text-zinc-400 group-hover:text-green-400 transition-colors">মুরগি
+                    </div>
+                </div>
+                <div onclick="filterProducts('কোয়েল')"
+                    class="cursor-pointer group glass-panel rounded-xl p-4 text-center hover:border-green-600/30 transition-all">
+                    <div class="text-3xl mb-2">🐦</div>
+                    <div class="text-xs font-medium text-zinc-400 group-hover:text-green-400 transition-colors">কোয়েল
+                    </div>
+                </div>
+                <div onclick="filterProducts('হাঁস')"
+                    class="cursor-pointer group glass-panel rounded-xl p-4 text-center hover:border-green-600/30 transition-all">
+                    <div class="text-3xl mb-2">🦆</div>
+                    <div class="text-xs font-medium text-zinc-400 group-hover:text-green-400 transition-colors">হাঁস
+                    </div>
+                </div>
+                <div onclick="filterProducts('ডিম')"
+                    class="cursor-pointer group glass-panel rounded-xl p-4 text-center hover:border-green-600/30 transition-all">
+                    <div class="text-3xl mb-2">🥚</div>
+                    <div class="text-xs font-medium text-zinc-400 group-hover:text-green-400 transition-colors">ডিম
+                    </div>
+                </div>
+                <div onclick="filterProducts('দুধ')"
+                    class="cursor-pointer group glass-panel rounded-xl p-4 text-center hover:border-green-600/30 transition-all">
+                    <div class="text-3xl mb-2">🥛</div>
+                    <div class="text-xs font-medium text-zinc-400 group-hover:text-green-400 transition-colors">দুধ
+                    </div>
+                </div>
+                <div onclick="filterProducts('ফল')"
+                    class="cursor-pointer group glass-panel rounded-xl p-4 text-center hover:border-green-600/30 transition-all">
+                    <div class="text-3xl mb-2">🥭</div>
+                    <div class="text-xs font-medium text-zinc-400 group-hover:text-green-400 transition-colors">ফল</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <div class="text-xs font-medium uppercase tracking-widest text-green-400 mb-4">আমাদের পণ্যসমূহ</div>
+                <h2 class="text-3xl font-semibold tracking-tight mb-4">তাজা ও খাঁটি পণ্য</h2>
+                <p class="text-zinc-400 max-w-2xl mx-auto">সরাসরি খামার থেকে সংগ্রহ করা, কোনো কেমিক্যাল বা প্রিজার্ভেটিভ
+                    ছাড়া — ১০০% প্রাকৃতিক পণ্য</p>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
+                <button onclick="filterProducts('all')"
+                    class="category-btn active px-4 py-2 rounded-lg border border-zinc-700 text-sm font-medium transition-all hover:border-green-600/50">সব
+                    পণ্য</button>
+                <button onclick="filterProducts('মুরগি')"
+                    class="category-btn px-4 py-2 rounded-lg border border-zinc-700 text-sm font-medium text-zinc-400 transition-all hover:border-green-600/50">মুরগি</button>
+                <button onclick="filterProducts('কোয়েল')"
+                    class="category-btn px-4 py-2 rounded-lg border border-zinc-700 text-sm font-medium text-zinc-400 transition-all hover:border-green-600/50">কোয়েল</button>
+                <button onclick="filterProducts('হাঁস')"
+                    class="category-btn px-4 py-2 rounded-lg border border-zinc-700 text-sm font-medium text-zinc-400 transition-all hover:border-green-600/50">হাঁস</button>
+                <button onclick="filterProducts('ডিম')"
+                    class="category-btn px-4 py-2 rounded-lg border border-zinc-700 text-sm font-medium text-zinc-400 transition-all hover:border-green-600/50">ডিম</button>
+                <button onclick="filterProducts('দুধ')"
+                    class="category-btn px-4 py-2 rounded-lg border border-zinc-700 text-sm font-medium text-zinc-400 transition-all hover:border-green-600/50">দুধ</button>
+                <button onclick="filterProducts('ফল')"
+                    class="category-btn px-4 py-2 rounded-lg border border-zinc-700 text-sm font-medium text-zinc-400 transition-all hover:border-green-600/50">ফল</button>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="product-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section id="why-us" class="py-24 border-t border-green-900/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <div class="text-xs font-medium uppercase tracking-widest text-green-400 mb-4">কেন আমাদের বেছে নেবেন
+                </div>
+                <h2 class="text-3xl font-semibold tracking-tight mb-4">OrganoKrishi-র বিশেষত্ব</h2>
+                <p class="text-zinc-500 max-w-lg mx-auto by-daniul text-xl">Purity from Root to Table — by Daniul</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-panel rounded-xl p-8 text-center hover:border-green-600/30 transition-all group">
+                    <div
+                        class="w-14 h-14 bg-green-600/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-green-600/20 transition-colors">
+                        <i data-lucide="shield-check" class="w-7 h-7 text-green-400"></i>
+                    </div>
+                    <h3 class="text-lg font-medium mb-2">১০০% খাঁটি</h3>
+                    <p class="text-sm text-zinc-400">সব পণ্য সরাসরি খামার থেকে, কোনো ভেজাল নেই</p>
+                </div>
+                <div class="glass-panel rounded-xl p-8 text-center hover:border-green-600/30 transition-all group">
+                    <div
+                        class="w-14 h-14 bg-green-600/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-green-600/20 transition-colors">
+                        <i data-lucide="banknote" class="w-7 h-7 text-green-400"></i>
+                    </div>
+                    <h3 class="text-lg font-medium mb-2">সেরা দাম</h3>
+                    <p class="text-sm text-zinc-400">মধ্যস্বত্বভোগী ছাড়া, তাই সবচেয়ে কম দাম</p>
+                </div>
+                <div class="glass-panel rounded-xl p-8 text-center hover:border-green-600/30 transition-all group">
+                    <div
+                        class="w-14 h-14 bg-green-600/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-green-600/20 transition-colors">
+                        <i data-lucide="truck" class="w-7 h-7 text-green-400"></i>
+                    </div>
+                    <h3 class="text-lg font-medium mb-2">ফ্রি ডেলিভারি</h3>
+                    <p class="text-sm text-zinc-400">যেকোনো অর্ডারে বিনামূল্যে হোম ডেলিভারি</p>
+                </div>
+                <div class="glass-panel rounded-xl p-8 text-center hover:border-green-600/30 transition-all group">
+                    <div
+                        class="w-14 h-14 bg-green-600/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-green-600/20 transition-colors">
+                        <i data-lucide="clock" class="w-7 h-7 text-green-400"></i>
+                    </div>
+                    <h3 class="text-lg font-medium mb-2">দ্রুত পৌঁছানো</h3>
+                    <p class="text-sm text-zinc-400">অর্ডারের ২ ঘণ্টায় আপনার দরজায়</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Offers -->
+    <section id="offers" class="py-24 border-t border-green-900/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <div class="text-xs font-medium uppercase tracking-widest text-green-400 mb-4">বিশেষ অফার</div>
+                <h2 class="text-3xl font-semibold tracking-tight">সীমিত সময়ের ডিল</h2>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Offer 1 -->
+                <div class="relative rounded-2xl overflow-hidden group cursor-pointer"
+                    onclick="filterProducts('মুরগি')">
+                    <img src="https://picsum.photos/seed/organic-chicken77/700/400.jpg"
+                        class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                        alt="মুরগি অফার">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-8">
+                        <div class="badge-sale inline-block px-3 py-1 rounded-full text-xs font-bold mb-3">২০% ছাড়
+                        </div>
+                        <h3 class="text-2xl font-bold mb-1">দেশি মুরগি ফ্যামিলি প্যাক</h3>
+                        <p class="text-zinc-400 text-sm">২ কেজি মুরগি + ১২টি ডিম মাত্র ৳৬৫০</p>
+                    </div>
+                </div>
+                <!-- Offer 2 -->
+                <div class="relative rounded-2xl overflow-hidden group cursor-pointer" onclick="filterProducts('ফল')">
+                    <img src="https://picsum.photos/seed/mango-fruit-harvest88/700/400.jpg"
+                        class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                        alt="ফল অফার">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-8">
+                        <div class="badge-new inline-block px-3 py-1 rounded-full text-xs font-bold mb-3">নতুন এসেছে
+                        </div>
+                        <h3 class="text-2xl font-bold mb-1">রাজশাহীর আম ও দিনাজপুরের লিচু</h3>
+                        <p class="text-zinc-400 text-sm">সিজনাল ফল এখনই অর্ডার করুন, স্টক শেষ হয়ে যাচ্ছে!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-24 border-t border-green-900/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <div class="text-xs font-medium uppercase tracking-widest text-green-400 mb-4">গ্রাহকদের মতামত</div>
+                <h2 class="text-3xl font-semibold tracking-tight">তারা কি বলছেন</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glass-panel rounded-xl p-8">
+                    <div class="flex items-center gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                    </div>
+                    <p class="text-zinc-300 text-sm leading-relaxed mb-6">"বাজারের চেয়ে অনেক ভালো মানের মুরগি পেলাম,
+                        দামও কম। আর ডেলিভারি তো চমৎকার! ১ ঘণ্টায় পৌঁছে গেল।"</p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-full bg-green-600/20 flex items-center justify-center text-green-400 font-semibold text-sm">
+                            রা</div>
+                        <div>
+                            <div class="text-sm font-medium">রাহেলা বেগম</div>
+                            <div class="text-xs text-zinc-500">ঢাকা, মিরপুর</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel rounded-xl p-8">
+                    <div class="flex items-center gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                    </div>
+                    <p class="text-zinc-300 text-sm leading-relaxed mb-6">"কোয়েলের ডিম খুবই তাজা পাচ্ছি প্রতিদিন।
+                        বাচ্চারা খুব পছন্দ করে। দুধও একদম খাঁটি, পানি মেশানো নয়।"</p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-full bg-green-600/20 flex items-center justify-center text-green-400 font-semibold text-sm">
+                            কা</div>
+                        <div>
+                            <div class="text-sm font-medium">কামরুল হাসান</div>
+                            <div class="text-xs text-zinc-500">ঢাকা, উত্তরা</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel rounded-xl p-8">
+                    <div class="flex items-center gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-green-400 text-green-400"></i>
+                    </div>
+                    <p class="text-zinc-300 text-sm leading-relaxed mb-6">"আম অর্ডার করেছিলাম — একদম গাছ থেকে পাড়া!
+                        লিচুও অসাধারণ। এখন সব ফল এখান থেকেই নিই।"</p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-full bg-green-600/20 flex items-center justify-center text-green-400 font-semibold text-sm">
+                            ফা</div>
+                        <div>
+                            <div class="text-sm font-medium">ফারহানা আক্তার</div>
+                            <div class="text-xs text-zinc-500">চট্টগ্রাম</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 border-t border-green-900/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="glass-panel rounded-2xl p-12 md:p-16 text-center relative overflow-hidden">
+                <div
+                    class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-green-600/5 rounded-full blur-3xl pointer-events-none">
+                </div>
+                <img src="https://z-cdn-media.chatglm.cn/files/de4e94e4-fc0f-4a1c-8ed5-793b56d2cbfa.jpg?auth_key=1881015813-e21d3bc0688e415d8e79d0a4ff7a0e7c-0-95be56ebbe46db09a4672ca85377542d"
+                    alt="OrganoKrishi"
+                    class="w-16 h-16 rounded-full object-cover border-2 border-green-600/30 mx-auto mb-6 logo-glow">
+                <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-2 relative">
+                    আজই অর্ডার করুন, <span class="text-green-400">পান সেরা ডিল!</span>
+                </h2>
+                <p class="by-daniul text-xl text-green-300/50 mb-4 relative">Purity from Root to Table</p>
+                <p class="text-zinc-400 text-lg mb-8 max-w-xl mx-auto relative">
+                    প্রথম অর্ডারে ১৫% ছাড় + ফ্রি ডেলিভারি। কুপন কোড: <span
+                        class="text-green-400 font-semibold">ORGANO15</span>
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center relative">
+                    <a href="#products"
+                        class="inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white font-semibold px-8 py-4 rounded-lg transition-all shadow-lg shadow-green-600/20">
+                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        এখনই কিনুন
+                    </a>
+                    <a href="tel:+8801XXXXXXXXX"
+                        class="inline-flex items-center justify-center gap-2 border border-zinc-700 hover:border-green-600/50 text-zinc-300 hover:text-green-400 font-semibold px-8 py-4 rounded-lg transition-all">
+                        <i data-lucide="phone" class="w-4 h-4"></i>
+                        কল করুন
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-green-900/20 py-16 bg-[#040805]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div class="md:col-span-1">
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="https://z-cdn-media.chatglm.cn/files/de4e94e4-fc0f-4a1c-8ed5-793b56d2cbfa.jpg?auth_key=1881015813-e21d3bc0688e415d8e79d0a4ff7a0e7c-0-95be56ebbe46db09a4672ca85377542d"
+                            alt="OrganoKrishi" class="w-10 h-10 rounded-full object-cover border border-green-700/30">
+                        <div>
+                            <span class="text-lg font-semibold">Organo<span class="text-green-400">Krishi</span></span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-green-500/70 uppercase tracking-wider mb-2">Purity from Root to Table</p>
+                    <p class="by-daniul text-sm text-green-300/40 mb-3">by Daniul</p>
+                    <p class="text-sm text-zinc-500 leading-relaxed">খাঁটি ও তাজা কৃষিপণ্য সরাসরি আপনার ঘরে পৌঁছে দিই।
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold uppercase tracking-wider mb-4">পণ্য</h4>
+                    <ul class="space-y-2 text-sm text-zinc-500">
+                        <li><a href="#" class="hover:text-green-400 transition-colors">দেশি মুরগি</a></li>
+                        <li><a href="#" class="hover:text-green-400 transition-colors">কোয়েল পাখি</a></li>
+                        <li><a href="#" class="hover:text-green-400 transition-colors">হাঁস</a></li>
+                        <li><a href="#" class="hover:text-green-400 transition-colors">ডিম</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold uppercase tracking-wider mb-4">আরও</h4>
+                    <ul class="space-y-2 text-sm text-zinc-500">
+                        <li><a href="#" class="hover:text-green-400 transition-colors">দুধ</a></li>
+                        <li><a href="#" class="hover:text-green-400 transition-colors">আম</a></li>
+                        <li><a href="#" class="hover:text-green-400 transition-colors">লিচু</a></li>
+                        <li><a href="#" class="hover:text-green-400 transition-colors">ফ্যামিলি প্যাক</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold uppercase tracking-wider mb-4">যোগাযোগ</h4>
+                    <ul class="space-y-2 text-sm text-zinc-500">
+                        <li class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4"></i> +880 1XXX-XXXXXX
+                        </li>
+                        <li class="flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4"></i>
+                            info@organokrishi.com</li>
+                        <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> বাংলাদেশ</li>
+                    </ul>
+                    <div class="flex gap-3 mt-4">
+                        <a href="#"
+                            class="w-9 h-9 rounded-lg bg-zinc-800/50 hover:bg-green-600/20 flex items-center justify-center text-zinc-400 hover:text-green-400 transition-all border border-green-900/10">
+                            <i data-lucide="facebook" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#"
+                            class="w-9 h-9 rounded-lg bg-zinc-800/50 hover:bg-green-600/20 flex items-center justify-center text-zinc-400 hover:text-green-400 transition-all border border-green-900/10">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#"
+                            class="w-9 h-9 rounded-lg bg-zinc-800/50 hover:bg-green-600/20 flex items-center justify-center text-zinc-400 hover:text-green-400 transition-all border border-green-900/10">
+                            <i data-lucide="youtube" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-green-900/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-zinc-600">© ২০২৫ OrganoKrishi — Purity from Root to Table. সর্বস্বত্ব সংরক্ষিত.
+                </p>
+                <div class="flex gap-6 text-xs text-zinc-600">
+                    <a href="#" class="hover:text-zinc-400 transition-colors">গোপনীয়তা নীতি</a>
+                    <a href="#" class="hover:text-zinc-400 transition-colors">শর্তাবলী</a>
+                    <a href="#" class="hover:text-zinc-400 transition-colors">রিফান্ড নীতি</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Product Data
+        const products = [
+            { id: 1, name: "দেশি মুরগি (১ কেজি)", category: "মুরগি", price: 320, oldPrice: 400, unit: "কেজি", emoji: "🐔", badge: "বেস্ট সেলার", badgeType: "sale", desc: "১০০% দেশি মুরগি, কোনো হরমোন ছাড়া। গ্রামের খামারে প্রাকৃতিকভাবে পালিত।", img: "deshi-murgi-organic01" },
+            { id: 2, name: "ব্রয়লার মুরগি (১ কেজি)", category: "মুরগি", price: 180, oldPrice: 220, unit: "কেজি", emoji: "🐔", badge: "", badgeType: "", desc: "সুস্থ ও সতেজ ব্রয়লার মুরগি, ভেজালমুক্ত গ্যারান্টি।", img: "broiler-organic02" },
+            { id: 3, name: "কোয়েল পাখি (১ জোড়া)", category: "কোয়েল", price: 150, oldPrice: 200, unit: "জোড়া", emoji: "🐦", badge: "অফার", badgeType: "sale", desc: "সুস্থ কোয়েল পাখি, ডিম পাড়ার জন্য প্রস্তুত। ভ্যাকসিন করা।", img: "quail-organic03" },
+            { id: 4, name: "কোয়েলের ডিম (৩০টি)", category: "কোয়েল", price: 180, oldPrice: 240, unit: "৩০টি", emoji: "🥚", badge: "জনপ্রিয়", badgeType: "new", desc: "তাজা কোয়েলের ডিম, পুষ্টিগুণে ভরপুর। বাচ্চাদের জন্য আদর্শ।", img: "quailegg-organic04" },
+            { id: 5, name: "দেশি হাঁস (১টি)", category: "হাঁস", price: 450, oldPrice: 550, unit: "পিস", emoji: "🦆", badge: "", badgeType: "", desc: "খাঁটি দেশি হাঁস, প্রাকৃতিক পরিবেশে পালিত। মাংস অত্যন্ত সুস্বাদু।", img: "deshi-hans-organic05" },
+            { id: 6, name: "হাঁসের ডিম (১২টি)", category: "হাঁস", price: 120, oldPrice: 150, unit: "১২টি", emoji: "🥚", badge: "", badgeType: "", desc: "তাজা হাঁসের ডিম, পুষ্টিগুণে মুরগির ডিমের চেয়ে উন্নত।", img: "duckegg-organic06" },
+            { id: 7, name: "দেশি মুরগির ডিম (১২টি)", category: "ডিম", price: 180, oldPrice: 220, unit: "ডজন", emoji: "🥚", badge: "বেস্ট সেলার", badgeType: "sale", desc: "১০০% দেশি মুরগির ডিম, হলুদ কুসুম, স্বাদে অতুলনীয়।", img: "deshiegg-organic07" },
+            { id: 8, name: "ফার্মের ডিম (৩০টি)", category: "ডিম", price: 280, oldPrice: 330, unit: "৩০টি", emoji: "🥚", badge: "সাশ্রয়ী", badgeType: "new", desc: "তাজা ফার্মের ডিম, বাল্ক প্যাকে সেরা দাম।", img: "farmegg-organic08" },
+            { id: 9, name: "খাঁটি গরুর দুধ (১ লিটার)", category: "দুধ", price: 80, oldPrice: 100, unit: "লিটার", emoji: "🥛", badge: "দৈনিক", badgeType: "new", desc: "১০০% খাঁটি গরুর দুধ, কোনো পানি মেশানো নয়। সকালে দোহানো।", img: "cowmilk-organic09" },
+            { id: 10, name: "খাঁটি ছাগলের দুধ (১ লিটার)", category: "দুধ", price: 120, oldPrice: 150, unit: "লিটার", emoji: "🥛", badge: "প্রিমিয়াম", badgeType: "sale", desc: "খাঁটি ছাগলের দুধ, স্বাস্থ্যের জন্য অত্যন্ত উপকারী।", img: "goatmilk-organic10" },
+            { id: 11, name: "রাজশাহীর আম (৫ কেজি)", category: "ফল", price: 350, oldPrice: 500, unit: "৫ কেজি", emoji: "🥭", badge: "৩০% ছাড়", badgeType: "sale", desc: "সোনামুগী ও হিমসাগর আম, গাছ থেকে সরাসরি। একদম পাকা ও মিষ্টি।", img: "rajshahiaam-organic11" },
+            { id: 12, name: "দিনাজপুরের লিচু (২ কেজি)", category: "ফল", price: 300, oldPrice: 400, unit: "২ কেজি", emoji: "🍇", badge: "সিজনাল", badgeType: "new", desc: "বম্বাই ও চায়না লিচু, দিনাজপুর থেকে সরাসরি। রসালো ও মিষ্টি।", img: "lichu-organic12" },
+        ];
+
+        let cart = [];
+        let currentFilter = 'all';
+
+        function renderProducts(filter = 'all') {
+            currentFilter = filter;
+            const grid = document.getElementById('product-grid');
+            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.trim() === 'সব পণ্য' && filter === 'all') btn.classList.add('active');
+                if (btn.textContent.trim() === filter) btn.classList.add('active');
+            });
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="product-card glass-panel rounded-xl overflow-hidden transition-all duration-300 group" data-category="${p.category}">
+                    <div class="relative overflow-hidden">
+                        <img src="https://picsum.photos/seed/${p.img}/400/280.jpg" alt="${p.name}" class="product-img w-full h-52 object-cover transition-transform duration-500">
+                        ${p.badge ? `<span class="absolute top-3 left-3 ${p.badgeType === 'sale' ? 'badge-sale' : 'badge-new'} px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">${p.badge}</span>` : ''}
+                        <button onclick="openModal(${p.id})" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 backdrop-blur flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-lg">${p.emoji}</span>
+                            <span class="text-[10px] uppercase tracking-widest text-zinc-500 font-medium">${p.category}</span>
+                        </div>
+                        <h3 class="text-base font-medium mb-3 group-hover:text-green-400 transition-colors">${p.name}</h3>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-xl font-bold text-green-400">৳${p.price}</span>
+                                <span class="text-sm text-zinc-600 line-through ml-2">৳${p.oldPrice}</span>
+                            </div>
+                            <button onclick="addToCart(${p.id})" class="w-10 h-10 rounded-lg bg-green-600/10 hover:bg-green-600 text-green-400 hover:text-white flex items-center justify-center transition-all duration-200">
+                                <i data-lucide="plus" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function filterProducts(category) {
+            renderProducts(category);
+            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            updateCart();
+            showToast(`${product.name} কার্টে যোগ হয়েছে! 🌿`, 'success');
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCart();
+        }
+
+        function updateQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) {
+                    removeFromCart(id);
+                    return;
+                }
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const countEl = document.getElementById('cart-count');
+            const itemsEl = document.getElementById('cart-items');
+            const emptyEl = document.getElementById('cart-empty');
+            const footerEl = document.getElementById('cart-footer');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const totalEl = document.getElementById('cart-total');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            if (totalItems > 0) {
+                countEl.textContent = totalItems;
+                countEl.classList.remove('hidden');
+            } else {
+                countEl.classList.add('hidden');
+            }
+
+            if (cart.length === 0) {
+                emptyEl.classList.remove('hidden');
+                footerEl.classList.add('hidden');
+                itemsEl.innerHTML = '';
+                itemsEl.appendChild(emptyEl);
+            } else {
+                emptyEl.classList.add('hidden');
+                footerEl.classList.remove('hidden');
+                subtotalEl.textContent = `৳${subtotal}`;
+                totalEl.textContent = `৳${subtotal}`;
+                itemsEl.innerHTML = cart.map(item => `
+                    <div class="flex gap-4 items-center p-3 rounded-lg bg-green-900/10 border border-green-900/10">
+                        <img src="https://picsum.photos/seed/${item.img}/80/80.jpg" class="w-14 h-14 rounded-lg object-cover flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-medium truncate">${item.name}</h4>
+                            <div class="text-green-400 font-semibold text-sm">৳${item.price}</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="updateQty(${item.id}, -1)" class="w-7 h-7 rounded bg-zinc-700/50 hover:bg-zinc-600 flex items-center justify-center text-sm transition-colors">−</button>
+                            <span class="text-sm font-medium w-6 text-center">${item.qty}</span>
+                            <button onclick="updateQty(${item.id}, 1)" class="w-7 h-7 rounded bg-zinc-700/50 hover:bg-zinc-600 flex items-center justify-center text-sm transition-colors">+</button>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="text-zinc-500 hover:text-red-400 transition-colors">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+            lucide.createIcons();
+        }
+
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            const overlay = document.getElementById('cart-overlay');
+            const isOpen = !sidebar.classList.contains('translate-x-full');
+            if (isOpen) {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+            } else {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function openModal(id) {
+            const p = products.find(prod => prod.id === id);
+            const discount = Math.round((1 - p.price / p.oldPrice) * 100);
+            document.getElementById('modal-content').innerHTML = `
+                <div class="relative">
+                    <img src="https://picsum.photos/seed/${p.img}/700/400.jpg" class="w-full h-56 md:h-72 object-cover rounded-t-2xl">
+                    <button onclick="closeModalDirect()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/50 backdrop-blur flex items-center justify-center text-white hover:bg-black/70 transition-colors">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                    ${p.badge ? `<span class="absolute top-4 left-4 ${p.badgeType === 'sale' ? 'badge-sale' : 'badge-new'} px-3 py-1 rounded-full text-xs font-bold">${p.badge}</span>` : ''}
+                </div>
+                <div class="p-8">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">${p.emoji}</span>
+                        <span class="text-xs uppercase tracking-widest text-zinc-500 font-medium">${p.category}</span>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-4">${p.name}</h2>
+                    <p class="text-zinc-400 leading-relaxed mb-6">${p.desc}</p>
+                    <div class="flex flex-wrap gap-4 mb-6">
+                        <div class="glass-panel rounded-lg px-4 py-3 text-center">
+                            <div class="text-xs text-zinc-500 mb-1">দাম</div>
+                            <div class="text-lg font-bold text-green-400">৳${p.price}</div>
+                        </div>
+                        <div class="glass-panel rounded-lg px-4 py-3 text-center">
+                            <div class="text-xs text-zinc-500 mb-1">পুরনো দাম</div>
+                            <div class="text-lg font-bold text-zinc-500 line-through">৳${p.oldPrice}</div>
+                        </div>
+                        <div class="glass-panel rounded-lg px-4 py-3 text-center">
+                            <div class="text-xs text-zinc-500 mb-1">সাশ্রয়</div>
+                            <div class="text-lg font-bold text-green-400">${discount}%</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="addToCart(${p.id}); closeModalDirect();" class="flex-1 bg-green-600 hover:bg-green-500 text-white font-semibold py-3 rounded-lg transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                            কার্টে যোগ করুন
+                        </button>
+                        <button onclick="addToCart(${p.id}); closeModalDirect(); toggleCart();" class="flex-1 border border-green-600/50 hover:bg-green-600/10 text-green-400 font-semibold py-3 rounded-lg transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="zap" class="w-4 h-4"></i>
+                            এখনই কিনুন
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('product-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeModal(event) {
+            if (event.target === document.getElementById('product-modal')) {
+                document.getElementById('product-modal').classList.add('hidden');
+            }
+        }
+
+        function closeModalDirect() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-green-600/20 border-green-600/30' : 'bg-green-600/20 border-green-600/30';
+            const textColor = type === 'success' ? 'text-green-300' : 'text-green-300';
+            toast.className = `toast ${bgColor} border rounded-lg px-4 py-3 ${textColor} text-sm font-medium backdrop-blur-xl flex items-center gap-2 min-w-[250px]`;
+            const icon = type === 'success' ? '✅' : 'ℹ️';
+            toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+
+</html>

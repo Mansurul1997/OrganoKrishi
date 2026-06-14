@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import CategoryBar from './components/CategoryBar';
@@ -7,11 +8,13 @@ import ProductModal from './components/ProductModal';
 import CartSidebar from './components/CartSidebar';
 import SectionBlocks from './components/SectionBlocks';
 import Footer from './components/Footer';
+import ProductPage from './components/ProductPage';
+import localProducts from './data/products';
 
 const categories = ['all', 'মুরগি', 'কোয়েল', 'হাঁস', 'ডিম', 'দুধ', 'ফল'];
 
 function App() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(localProducts);
   const [filter, setFilter] = useState('all');
   const [cart, setCart] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -20,9 +23,15 @@ function App() {
 
   useEffect(() => {
     fetch('/api/products')
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
       .then(setProducts)
-      .catch(() => showToast('পণ্য লোড করতে সমস্যা হয়েছে।', 'error'));
+      .catch(() => {
+        setProducts(localProducts);
+        showToast('সার্ভার থেকে পাওয়া যাচ্ছে না, লোকাল পণ্য দেখানো হচ্ছে।', 'error');
+      });
   }, []);
 
   const filteredProducts =
@@ -88,16 +97,8 @@ function App() {
       .catch(() => showToast('অর্ডার পাঠাতে ব্যর্থ।', 'error'));
   };
 
-  return (
-    <div className="min-h-screen bg-[#050a06] text-white">
-      <Navbar
-        categories={categories}
-        activeCategory={filter}
-        onFilter={handleFilter}
-        cartCount={cartQuantity}
-        onOpenCart={() => setCartOpen(true)}
-      />
-
+  function Home() {
+    return (
       <main className="pt-16">
         <Hero />
 
@@ -140,6 +141,46 @@ function App() {
 
         <SectionBlocks />
       </main>
+    );
+  }
+
+  function ProductPageWrapper() {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const product = products.find((p) => String(p.id) === String(id));
+    if (products.length === 0) {
+      return (
+        <div className="py-24 max-w-7xl mx-auto px-6 text-center text-zinc-400">লোড হচ্ছে…</div>
+      );
+    }
+
+    if (!product) {
+      return (
+        <div className="py-24 max-w-7xl mx-auto px-6 text-center text-zinc-400">পণ্য পাওয়া যায়নি।</div>
+      );
+    }
+
+    return (
+      <main className="pt-16">
+        <ProductPage product={product} onAddToCart={(p) => addToCart(p)} onBack={() => navigate(-1)} />
+      </main>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#050a06] text-white">
+      <Navbar
+        categories={categories}
+        activeCategory={filter}
+        onFilter={handleFilter}
+        cartCount={cartQuantity}
+        onOpenCart={() => setCartOpen(true)}
+      />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/product/:id" element={<ProductPageWrapper />} />
+      </Routes>
 
       <Footer />
 

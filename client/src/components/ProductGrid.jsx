@@ -1,4 +1,6 @@
-function ProductGrid({ products, onOpenModal, onAddToCart }) {
+import { Link } from 'react-router-dom';
+
+function ProductGrid({ products, onOpenModal, onAddToCart, onViewProduct }) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {products.length === 0 ? (
@@ -34,7 +36,11 @@ function ProductGrid({ products, onOpenModal, onAddToCart }) {
                 <span>{product.emoji}</span>
                 <span className="uppercase tracking-widest">{product.category}</span>
               </div>
-              <h3 className="mb-3 text-base font-medium text-white">{product.name}</h3>
+              <h3 className="mb-3 text-base font-medium text-white">
+                <Link to={`/product/${product.id}`} className="text-left hover:underline">
+                  {product.name}
+                </Link>
+              </h3>
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <span className="text-xl font-bold text-green-400">৳{product.price}</span>

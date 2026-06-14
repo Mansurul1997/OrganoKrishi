@@ -1,0 +1,14 @@
+module.exports = [
+  { id: 1, name: 'দেশি মুরগি (১ কেজি)', category: 'মুরগি', price: 320, oldPrice: 400, unit: 'কেজি', emoji: '🐔', badge: 'বেস্ট সেলার', badgeType: 'sale', desc: '১০০% দেশি মুরগি, কোনো হরমোন ছাড়া। গ্রামের খামারে প্রাকৃতিকভাবে পালিত।', img: 'deshi-murgi-organic01' },
+  { id: 2, name: 'ব্রয়লার মুরগি (১ কেজি)', category: 'মুরগি', price: 180, oldPrice: 220, unit: 'কেজি', emoji: '🐔', badge: '', badgeType: '', desc: 'সুস্থ ও সতেজ ব্রয়লার মুরগি, ভেজালমুক্ত গ্যারান্টি।', img: 'broiler-organic02' },
+  { id: 3, name: 'কোয়েল পাখি (১ জোড়া)', category: 'কোয়েল', price: 150, oldPrice: 200, unit: 'জোড়া', emoji: '🐦', badge: 'অফার', badgeType: 'sale', desc: 'সুস্থ কোয়েল পাখি, ডিম পাড়ার জন্য প্রস্তুত। ভ্যাকসিন করা।', img: 'quail-organic03' },
+  { id: 4, name: 'কোয়েলের ডিম (৩০টি)', category: 'কোয়েল', price: 180, oldPrice: 240, unit: '৩০টি', emoji: '🥚', badge: 'জনপ্রিয়', badgeType: 'new', desc: 'তাজা কোয়েলের ডিম, পুষ্টিগুণে ভরপুর। বাচ্চাদের জন্য আদর্শ।', img: 'quailegg-organic04' },
+  { id: 5, name: 'দেশি হাঁস (১টি)', category: 'হাঁস', price: 450, oldPrice: 550, unit: 'পিস', emoji: '🦆', badge: '', badgeType: '', desc: 'খাঁটি দেশি হাঁস, প্রাকৃতিক পরিবেশে পালিত। মাংস অত্যন্ত সুস্বাদু।', img: 'deshi-hans-organic05' },
+  { id: 6, name: 'হাঁসের ডিম (১২টি)', category: 'হাঁস', price: 120, oldPrice: 150, unit: '১২টি', emoji: '🥚', badge: '', badgeType: '', desc: 'তাজা হাঁসের ডিম, পুষ্টিগুণে মুরগির ডিমের চেয়ে উন্নত।', img: 'duckegg-organic06' },
+  { id: 7, name: 'দেশি মুরগির ডিম (১২টি)', category: 'ডিম', price: 180, oldPrice: 220, unit: 'ডজন', emoji: '🥚', badge: 'বেস্ট সেলার', badgeType: 'sale', desc: '১০০% দেশি মুরগির ডিম, হলুদ কুসুম, স্বাদে অতুলনীয়।', img: 'deshiegg-organic07' },
+  { id: 8, name: 'ফার্মের ডিম (৩০টি)', category: 'ডিম', price: 280, oldPrice: 330, unit: '৩০টি', emoji: '🥚', badge: 'সাশ্রয়ী', badgeType: 'new', desc: 'তাজা ফার্মের ডিম, বাল্ক প্যাকে সেরা দাম।', img: 'farmegg-organic08' },
+  { id: 9, name: 'খাঁটি গরুর দুধ (১ লিটার)', category: 'দুধ', price: 80, oldPrice: 100, unit: 'লিটার', emoji: '🥛', badge: 'দৈনিক', badgeType: 'new', desc: '১০০% খাঁটি গরুর দুধ, কোনো পানি মেশানো নয়। সকালে দোহানো।', img: 'cowmilk-organic09' },
+  { id: 10, name: 'খাঁটি ছাগলের দুধ (১ লিটার)', category: 'দুধ', price: 120, oldPrice: 150, unit: 'লিটার', emoji: '🥛', badge: 'প্রিমিয়াম', badgeType: 'sale', desc: 'খাঁটি ছাগলের দুধ, স্বাস্থ্যের জন্য অত্যন্ত উপকারী।', img: 'goatmilk-organic10' },
+  { id: 11, name: 'রাজশাহীর আম (৫ কেজি)', category: 'ফল', price: 350, oldPrice: 500, unit: '৫ কেজি', emoji: '🥭', badge: '৩০% ছাড়', badgeType: 'sale', desc: 'সোনামুগী ও হিমসাগর আম, গাছ থেকে সরাসরি। একদম পাকা ও মিষ্টি।', img: 'rajshahiaam-organic11' },
+  { id: 12, name: 'দিনাজপুরের লিচু (২ কেজি)', category: 'ফল', price: 300, oldPrice: 400, unit: '২ কেজি', emoji: '🍇', badge: 'সিজনাল', badgeType: 'new', desc: 'বম্বাই ও চায়না লিচু, দিনাজপুর থেকে সরাসরি। রসালো ও মিষ্টি।', img: 'lichu-organic12' }
+];

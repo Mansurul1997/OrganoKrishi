@@ -1,0 +1,18 @@
+{
+  "name": "organokrishi-server",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.4",
+    "organokrishi-shop": "file:.."
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
